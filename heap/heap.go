@@ -25,6 +25,7 @@ func (mh *MinHeap) delete() int {
 	mh.length--
 	mh.data[0] = mh.data[mh.length]
 	mh.heapifyDown(0)
+
 	return out
 
 }
