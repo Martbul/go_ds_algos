@@ -17,12 +17,12 @@ func (mh *MinHeap) delete() int {
 	}
 
 	out := mh.data[0]
-	if mh.length == 1 {
+	mh.length--
+	if mh.length == 0 {
 		mh.data = []int{}
 		return out
 	}
 
-	mh.length--
 	mh.data[0] = mh.data[mh.length]
 	mh.heapifyDown(0)
 
