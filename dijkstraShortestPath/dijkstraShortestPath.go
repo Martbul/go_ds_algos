@@ -63,6 +63,13 @@ func main() {
 func dijkstrShortestPath(list1 *WeightedAdjacencyList, source int, needle int) []int {
 	seen := make([]bool, len(*list1))
 
+	prev := make([]int, len(*list1))
+
+	// Initialize `prev` with -1 to indicate unvisited nodes
+	for i := range prev {
+		prev[i] = -1
+	}
+
 	// Create a slice to hold distances with the same length as arr
 	dists := make([]float64, len(*list1))
 
@@ -78,19 +85,31 @@ func dijkstrShortestPath(list1 *WeightedAdjacencyList, source int, needle int) [
 
 		seen[curr] = true
 
-		adjs := *list1[curr] //list of our endges
+		adjs := (*list1)[curr] //list of our endges
 		for i := 0; i < len(adjs); i++ {
 			edge := adjs[i]
-			if seen[edge.to] {
+			if seen[edge.To] {
 				continue
 			}
 
 			dist := dists[curr] + float64(edge.Weight)
 			if dist < dists[edge.To] {
-				dists[edge.To]
+				dists[edge.To] = dist
+				prev[edge.To] = curr
 			}
 		}
 	}
+
+	out := []int{}
+	curr := needle
+
+	for prev[curr] != -1 {
+		out = append(out, curr)
+		curr = prev[curr]
+	}
+
+	out = append(out, source)
+	return reverseInts(out)
 
 }
 
@@ -105,7 +124,7 @@ func hasUnvisited(seen []bool, dists []float64) bool {
 	return false
 }
 
-func getLowestUnvisited(seen []bool, dists []int) int {
+func getLowestUnvisited(seen []bool, dists []float64) int {
 	index := -1
 	lowestDistanse := math.Inf(1)
 
@@ -121,4 +140,13 @@ func getLowestUnvisited(seen []bool, dists []int) int {
 	}
 
 	return index
+}
+
+// Reverse a slice of integers and return a new slice
+func reverseInts(arr []int) []int {
+	result := make([]int, len(arr)) // Create a new slice to hold the result
+	for i, j := 0, len(arr)-1; i <= j; i, j = i+1, j-1 {
+		result[i], result[j] = arr[j], arr[i] // Assign swapped elements
+	}
+	return result
 }
